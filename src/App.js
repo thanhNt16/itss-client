@@ -1,24 +1,38 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import { Layout, Typography } from "antd";
+import {
+  UploadOutlined,
+  UserOutlined,
+  VideoCameraOutlined,
+} from "@ant-design/icons";
+import "./App.css";
 
+const { Header, Content, Footer, Sider } = Layout;
+const { Title, Text } = Typography
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Layout>
+        
+        <Layout>
+          <Header
+            className="site-layout-sub-header-background"
+            style={{ padding: 0 }}
+          >
+            <Title colo>Robot warehouse system</Title>
+          </Header>
+          <Content style={{ height: "100vh" }}>
+            <div
+              className="h-full p-24 site-layout-background"
+            >
+              content
+            </div>
+          </Content>
+          <Footer style={{ textAlign: "center" }}>
+            Ant Design ©2018 Created by Ant UED
+          </Footer>
+        </Layout>
+      </Layout>
     </div>
   );
 }

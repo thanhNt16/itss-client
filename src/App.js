@@ -1,11 +1,23 @@
 import React, { useState, useEffect } from "react";
 import clsx from "clsx";
+import swal from "sweetalert";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward";
 import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward";
 import ArrowForwardIcon from "@material-ui/icons/ArrowForward";
-import { Grid, TextField, Typography, Button, Switch } from "@material-ui/core";
+import {
+  Grid,
+  TextField,
+  Typography,
+  Button,
+  Switch,
+  FormControl,
+  MenuItem,
+  InputLabel,
+  Select,
+} from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
+import io from "socket.io-client";
 
 const useStyles = makeStyles({
   titleBackground: {
@@ -23,7 +35,12 @@ const useStyles = makeStyles({
     borderRightColor: "white",
   },
 });
+const socket = io("127.0.0.1:5000");
+
 function App() {
+  const [connected, setConnected] = useState(false);
+  const [robotID, setRobotID] = useState(null);
+  const [robotList, setRobotList] = useState([]);
   const [auto, setAuto] = useState(false);
   const classes = useStyles();
   const matrix = [
@@ -38,23 +55,54 @@ function App() {
     }
   }
   useEffect(() => {
+    socket.open();
+    socket.on("connect", () => {
+      console.log(socket.connected); // true
+    });
+    socket.emit("robot_list", function (data) {
+      console.log(data);
+      setRobotList(data);
+    });
+    return () => {
+      socket.close();
+    };
+  }, []);
+
+  useEffect(() => {
     function keyHandling(e) {
-      switch (e.keyCode) {
-        case 37:
-          alert("press arrow left");
-          break;
-        case 38:
-          alert("press arrow up");
-          break;
-        case 39:
-          alert("press arrow right");
-          break;
-        case 40:
-          alert("press arrow down");
-          break;
-        default:
-          console.log("other key");
-          break;
+      if (robotID) {
+        switch (e.keyCode) {
+          case 37:
+            // alert("press arrow left");
+            socket.emit("manual", { id: robotID, action: "left" });
+
+            break;
+          case 38:
+            // alert("press arrow up");
+            socket.emit("manual", { id: robotID, action: "forward" });
+            break;
+          case 39:
+            // alert("press arrow right");
+            socket.emit("manual", { id: robotID, action: "right" });
+            break;
+          case 40:
+            // alert("press arrow down");
+            socket.emit("manual", { id: robotID, action: "down" });
+            break;
+          case 80:
+            //press p
+            // alert("press arrow down");
+            socket.emit("manual", { id: robotID, action: "pick" });
+            break;
+          case 68:
+            socket.emit("manual", { id: robotID, action: "drop" });
+            break;
+          default:
+            console.log("other key");
+            break;
+        }
+      } else {
+        swal("Oops!", "You should select a robot first", "error");
       }
     }
     window.addEventListener("keydown", keyHandling);
@@ -62,7 +110,38 @@ function App() {
     return () => {
       window.removeEventListener("keydown", keyHandling);
     };
-  });
+  }, [robotID]);
+
+  function handleClick(type) {
+    if (robotID) {
+      switch (type) {
+        case "forward":
+          socket.emit("manual", { id: robotID, action: "forward" });
+          break;
+        case "left":
+          socket.emit("manual", { id: robotID, action: "left" });
+          break;
+        case "right":
+          socket.emit("manual", { id: robotID, action: "right" });
+          break;
+        case "down":
+          socket.emit("manual", { id: robotID, action: "down" });
+          break;
+        case "pick":
+          socket.emit("manual", { id: robotID, action: "pick" });
+          break;
+
+        case "drop":
+          socket.emit("manual", { id: robotID, action: "drop" });
+          break;
+        default:
+          break;
+      }
+    } else {
+      console.log("Please choose robot first");
+      swal("Oops!", "You should select a robot first", "error");
+    }
+  }
 
   return (
     <div onKeyDown={handleKeyPress} className="w-full h-full p-12">
@@ -120,13 +199,18 @@ function App() {
       <Grid container>
         <Grid item xs={12} md={6} className="flex flex-col pr-20 pl-20">
           <div className="flex mt-8 justify-between w-full">
-            <TextField
-              label="Robot ID"
-              variant="outlined"
-              inputProps={{
-                style: { borderColor: "#4299e1", color: "#4299e1" },
-              }}
-            />
+            <FormControl className="w-1/3" variant="outlined">
+              <InputLabel className="w-full">Robot ID</InputLabel>
+              <Select
+                fullWidth
+                value={robotID}
+                onChange={(e) => setRobotID(e.target.value)}
+              >
+                {robotList.map((item) => {
+                  return <MenuItem value={item}>{item}</MenuItem>;
+                })}
+              </Select>
+            </FormControl>
             <TextField
               label="Starting Point"
               variant="outlined"
@@ -164,28 +248,38 @@ function App() {
             <div className="w-full h-auto">
               <div className="w-full flex justify-center">
                 <Button
-                  onKeyPress={handleKeyPress}
+                  onClick={() => handleClick("forward")}
                   style={{ background: "#4299e1", color: "#fff" }}
                 >
                   <ArrowUpwardIcon />
                 </Button>
               </div>
               <div className="w-full flex justify-around">
-                <Button style={{ background: "#4299e1", color: "#fff" }}>
+                <Button
+                  onClick={() => handleClick("left")}
+                  style={{ background: "#4299e1", color: "#fff" }}
+                >
                   <ArrowBackIcon />
                 </Button>
 
-                <Button style={{ background: "#4299e1", color: "#fff" }}>
+                <Button
+                  onClick={() => handleClick("right")}
+                  style={{ background: "#4299e1", color: "#fff" }}
+                >
                   <ArrowForwardIcon />
                 </Button>
               </div>
               <div className="w-full flex justify-center">
-                <Button style={{ background: "#4299e1", color: "#fff" }}>
+                <Button
+                  onClick={() => handleClick("down")}
+                  style={{ background: "#4299e1", color: "#fff" }}
+                >
                   <ArrowDownwardIcon />
                 </Button>
               </div>
               <div className="w-full flex justify-around mt-8">
                 <Button
+                  onClick={() => handleClick("pick")}
                   variant="contained"
                   style={{
                     background: "#4299e1",
@@ -195,6 +289,7 @@ function App() {
                   Pick
                 </Button>
                 <Button
+                  onClick={() => handleClick("drop")}
                   variant="contained"
                   style={{ background: "#4299e1", color: "#fff" }}
                 >

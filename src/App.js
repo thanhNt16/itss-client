@@ -175,152 +175,76 @@ function App() {
           Robot Warehouse Management System
         </Typography>
       </div>
-      <Grid container>
-        <Grid item xs={12} md={6} className="flex justify-center">
-          <div className={classes.matrix}>
-            {matrix.map((item, ind) => {
-              return (
-                <div key={ind} className="flex">
-                  {item.map((el, index) => {
-                    return (
-                      <div
-                        key={index}
-                        className={
-                          index === item.length - 1
-                            ? clsx(
-                                classes.box,
-                                "flex justify-center items-center"
-                              )
-                            : clsx(
-                                classes.box,
-                                classes.noBorderRight,
-                                "flex justify-center items-center"
-                              )
-                        }
-                      >
-                        {el}
-                      </div>
-                    );
-                  })}
-                </div>
-              );
-            })}
-          </div>
-        </Grid>
-        <Grid item xs={12} md={6} className="flex justify-center">
-          <img
-            alt="camere"
-            src={`${host}video_feed`}
-            style={{ width: "100%" }}
-          />
-        </Grid>
-      </Grid>
-      <Grid container>
-        <Grid item xs={12} md={6} className="flex flex-col pr-20 pl-20">
-          <div className="flex mt-8 justify-between w-full">
-            <FormControl className="w-1/3" variant="outlined">
-              <InputLabel className="w-full">Robot ID</InputLabel>
-              <Select
-                fullWidth
-                value={robotID}
-                onChange={(e) => setRobotID(e.target.value)}
-              >
-                {robotList.map((item) => {
-                  return <MenuItem value={item}>{item}</MenuItem>;
-                })}
-              </Select>
-            </FormControl>
-            <TextField
-              label="Starting Point"
-              variant="outlined"
-              inputProps={{
-                style: { borderColor: "#4299e1", color: "#4299e1" },
-              }}
-            />
-          </div>
-          <div className="flex mt-8 justify-between w-full">
-            <TextField
-              label="Heading Point"
-              variant="outlined"
-              inputProps={{
-                style: { borderColor: "#4299e1", color: "#4299e1" },
-              }}
-            />
-            <Button
-              variant="contained"
-              style={{ background: "#4299e1", color: "#fff" }}
-            >
-              Submit
-            </Button>
-          </div>
-        </Grid>
-        <Grid item xs={12} md={6} className="flex flex-col pr-20 pl-20">
-          <Typography variant="h5">Auto Mode</Typography>
-          <Switch
-            checked={auto}
-            onChange={() => setAuto(!auto)}
-            name="auto"
-            color="primary"
-            inputProps={{ "aria-label": "secondary checkbox" }}
-          />
-          {!auto && (
-            <div className="w-full h-auto">
-              <div className="w-full flex justify-center">
-                <Button
-                  onClick={() => handleClick("forward")}
-                  style={{ background: "#4299e1", color: "#fff" }}
-                >
-                  <ArrowUpwardIcon />
-                </Button>
-              </div>
-              <div className="w-full flex justify-around">
-                <Button
-                  onClick={() => handleClick("left")}
-                  style={{ background: "#4299e1", color: "#fff" }}
-                >
-                  <ArrowBackIcon />
-                </Button>
-
-                <Button
-                  onClick={() => handleClick("right")}
-                  style={{ background: "#4299e1", color: "#fff" }}
-                >
-                  <ArrowForwardIcon />
-                </Button>
-              </div>
-              <div className="w-full flex justify-center">
-                <Button
-                  onClick={() => handleClick("backward")}
-                  style={{ background: "#4299e1", color: "#fff" }}
-                >
-                  <ArrowDownwardIcon />
-                </Button>
-              </div>
-              <div className="w-full flex justify-around mt-8">
-                <Button
-                  onClick={() => handleClick("up")}
-                  variant="contained"
-                  style={{
-                    background: "#4299e1",
-                    color: "#fff",
-                  }}
-                >
-                  Pick
-                </Button>
-                <Button
-                  onClick={() => handleClick("down")}
-                  variant="contained"
-                  style={{ background: "#4299e1", color: "#fff" }}
-                >
-                  Drop
-                </Button>
-              </div>
+      <div className="m-auto w-4/5">
+        <Grid container>
+          <Grid item xs={12} md={6} className="flex justify-center">
+            <div className={classes.matrix}>
+              {matrix.map((item, ind) => {
+                return (
+                  <div key={ind} className="flex">
+                    {item.map((el, index) => {
+                      return (
+                        <div
+                          key={index}
+                          className={
+                            index === item.length - 1
+                              ? clsx(
+                                  classes.box,
+                                  "flex justify-center items-center"
+                                )
+                              : clsx(
+                                  classes.box,
+                                  classes.noBorderRight,
+                                  "flex justify-center items-center"
+                                )
+                          }
+                        >
+                          {el}
+                        </div>
+                      );
+                    })}
+                  </div>
+                );
+              })}
             </div>
-          )}
-          {auto && (
-            <div className="w-full h-auto flex justify-between">
+          </Grid>
+          <Grid item xs={12} md={6} className="flex justify-center">
+            <img
+              alt="camere"
+              src={`${host}video_feed`}
+              style={{ width: "100%" }}
+            />
+          </Grid>
+        </Grid>
+      </div>
+      <div className="m-auto w-4/5">
+        <Grid container>
+          <Grid item xs={12} md={6} className="flex flex-col">
+            <div className="flex mt-8 w-full">
+              <FormControl className="w-1/3" variant="outlined">
+                <InputLabel className="w-full">Robot ID</InputLabel>
+                <Select
+                  fullWidth
+                  value={robotID}
+                  onChange={(e) => setRobotID(e.target.value)}
+                >
+                  {robotList.map((item) => {
+                    return <MenuItem value={item}>{item}</MenuItem>;
+                  })}
+                </Select>
+              </FormControl>
               <TextField
+                className="ml-12"
                 label="Starting Point"
+                variant="outlined"
+                inputProps={{
+                  style: { borderColor: "#4299e1", color: "#4299e1" },
+                }}
+              />
+            </div>
+            <div className="flex mt-8  w-full">
+              <TextField
+                label="Heading Point"
                 variant="outlined"
                 inputProps={{
                   style: { borderColor: "#4299e1", color: "#4299e1" },
@@ -330,12 +254,93 @@ function App() {
                 variant="contained"
                 style={{ background: "#4299e1", color: "#fff" }}
               >
-                Start
+                Submit
               </Button>
             </div>
-          )}
+          </Grid>
+          <Grid item xs={12} md={6} className="flex flex-col">
+            <Typography variant="h5">Auto Mode</Typography>
+            <Switch
+              checked={auto}
+              onChange={() => setAuto(!auto)}
+              name="auto"
+              color="primary"
+              inputProps={{ "aria-label": "secondary checkbox" }}
+            />
+            {!auto && (
+              <div className="w-full h-auto">
+                <div className="w-full flex justify-center">
+                  <Button
+                    onClick={() => handleClick("forward")}
+                    style={{ background: "#4299e1", color: "#fff" }}
+                  >
+                    <ArrowUpwardIcon />
+                  </Button>
+                </div>
+                <div className="w-full flex justify-around">
+                  <Button
+                    onClick={() => handleClick("left")}
+                    style={{ background: "#4299e1", color: "#fff" }}
+                  >
+                    <ArrowBackIcon />
+                  </Button>
+
+                  <Button
+                    onClick={() => handleClick("right")}
+                    style={{ background: "#4299e1", color: "#fff" }}
+                  >
+                    <ArrowForwardIcon />
+                  </Button>
+                </div>
+                <div className="w-full flex justify-center">
+                  <Button
+                    onClick={() => handleClick("backward")}
+                    style={{ background: "#4299e1", color: "#fff" }}
+                  >
+                    <ArrowDownwardIcon />
+                  </Button>
+                </div>
+                <div className="w-full flex justify-around mt-8">
+                  <Button
+                    onClick={() => handleClick("up")}
+                    variant="contained"
+                    style={{
+                      background: "#4299e1",
+                      color: "#fff",
+                    }}
+                  >
+                    Pick
+                  </Button>
+                  <Button
+                    onClick={() => handleClick("down")}
+                    variant="contained"
+                    style={{ background: "#4299e1", color: "#fff" }}
+                  >
+                    Drop
+                  </Button>
+                </div>
+              </div>
+            )}
+            {auto && (
+              <div className="w-full h-auto flex justify-between">
+                <TextField
+                  label="Starting Point"
+                  variant="outlined"
+                  inputProps={{
+                    style: { borderColor: "#4299e1", color: "#4299e1" },
+                  }}
+                />
+                <Button
+                  variant="contained"
+                  style={{ background: "#4299e1", color: "#fff" }}
+                >
+                  Start
+                </Button>
+              </div>
+            )}
+          </Grid>
         </Grid>
-      </Grid>
+      </div>
     </div>
   );
 }

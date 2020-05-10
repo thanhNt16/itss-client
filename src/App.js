@@ -41,7 +41,7 @@ const socket = io(host);
 
 function App() {
   const [connected, setConnected] = useState(false);
-  const [robotID, setRobotID] = useState(null);
+  const [robotID, setRobotID] = useState("");
   const [robotList, setRobotList] = useState([]);
   const [auto, setAuto] = useState(false);
   const classes = useStyles();
@@ -209,7 +209,6 @@ function App() {
         </Grid>
         <Grid item xs={12} md={6} className="flex justify-center">
           <img
-            class="remote_camera"
             alt="camere"
             src={`${host}video_feed`}
             style={{ width: "100%" }}

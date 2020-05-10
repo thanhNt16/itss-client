@@ -49,11 +49,7 @@ function App() {
     [1, 1, 1, 1],
     [1, 1, 1, 1],
   ];
-  function handleKeyPress(event) {
-    if (event.keyCode === 13) {
-      console.log("Enter key pressed");
-    }
-  }
+
   useEffect(() => {
     socket.open();
     socket.on("connect", () => {
@@ -67,6 +63,23 @@ function App() {
       socket.close();
     };
   }, []);
+
+  useEffect(() => {
+    socket.on("robot_connected", (id) => {
+      console.log("Robot connected ", id);
+      socket.emit("robot_list", function (data) {
+        console.log(data);
+        setRobotList(data);
+      });
+    });
+    socket.on("robot_disconnected", (id) => {
+      console.log("Robot disconnected ", id);
+      socket.emit("robot_list", function (data) {
+        console.log(data);
+        setRobotList(data);
+      });
+    });
+  });
 
   useEffect(() => {
     function keyHandling(e) {
@@ -144,7 +157,7 @@ function App() {
   }
 
   return (
-    <div onKeyDown={handleKeyPress} className="w-full h-full p-12">
+    <div className="w-full h-full p-12">
       <div
         className={clsx(
           classes.titleBackground,
@@ -193,7 +206,12 @@ function App() {
           </div>
         </Grid>
         <Grid item xs={12} md={6} className="flex justify-center">
-          <img class="remote_camera" src="http://localhost:5000/video_feed" style={{width: '100%'}}/>
+          <img
+            class="remote_camera"
+            alt="camere"
+            src="http://localhost:5000/video_feed"
+            style={{ width: "100%" }}
+          />
         </Grid>
       </Grid>
       <Grid container>

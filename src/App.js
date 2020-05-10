@@ -87,15 +87,15 @@ function App() {
             break;
           case 40:
             // alert("press arrow down");
-            socket.emit("manual", { id: robotID, action: "down" });
+            socket.emit("manual", { id: robotID, action: "backward" });
             break;
           case 80:
             //press p
             // alert("press arrow down");
-            socket.emit("manual", { id: robotID, action: "pick" });
+            socket.emit("manual", { id: robotID, action: "up" });
             break;
           case 68:
-            socket.emit("manual", { id: robotID, action: "drop" });
+            socket.emit("manual", { id: robotID, action: "down" });
             break;
           default:
             console.log("other key");
@@ -125,14 +125,14 @@ function App() {
           socket.emit("manual", { id: robotID, action: "right" });
           break;
         case "down":
-          socket.emit("manual", { id: robotID, action: "down" });
+          socket.emit("manual", { id: robotID, action: "backward" });
           break;
         case "pick":
-          socket.emit("manual", { id: robotID, action: "pick" });
+          socket.emit("manual", { id: robotID, action: "up" });
           break;
 
         case "drop":
-          socket.emit("manual", { id: robotID, action: "drop" });
+          socket.emit("manual", { id: robotID, action: "down" });
           break;
         default:
           break;
@@ -193,7 +193,7 @@ function App() {
           </div>
         </Grid>
         <Grid item xs={12} md={6} className="flex justify-center">
-          <div className={clsx("w-64 h-64", classes.titleBackground)}></div>
+          <img class="remote_camera" src="http://localhost:5000/video_feed" style={{width: '100%'}}/>
         </Grid>
       </Grid>
       <Grid container>
@@ -271,7 +271,7 @@ function App() {
               </div>
               <div className="w-full flex justify-center">
                 <Button
-                  onClick={() => handleClick("down")}
+                  onClick={() => handleClick("backward")}
                   style={{ background: "#4299e1", color: "#fff" }}
                 >
                   <ArrowDownwardIcon />
@@ -279,7 +279,7 @@ function App() {
               </div>
               <div className="w-full flex justify-around mt-8">
                 <Button
-                  onClick={() => handleClick("pick")}
+                  onClick={() => handleClick("up")}
                   variant="contained"
                   style={{
                     background: "#4299e1",
@@ -289,7 +289,7 @@ function App() {
                   Pick
                 </Button>
                 <Button
-                  onClick={() => handleClick("drop")}
+                  onClick={() => handleClick("down")}
                   variant="contained"
                   style={{ background: "#4299e1", color: "#fff" }}
                 >

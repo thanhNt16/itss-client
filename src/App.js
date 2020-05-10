@@ -19,6 +19,8 @@ import {
 import { makeStyles } from "@material-ui/core/styles";
 import io from "socket.io-client";
 
+const host = "https://itss-server.herokuapp.com/";
+
 const useStyles = makeStyles({
   titleBackground: {
     background: "#4299e1",
@@ -35,7 +37,7 @@ const useStyles = makeStyles({
     borderRightColor: "white",
   },
 });
-const socket = io("127.0.0.1:5000");
+const socket = io(host);
 
 function App() {
   const [connected, setConnected] = useState(false);
@@ -209,7 +211,7 @@ function App() {
           <img
             class="remote_camera"
             alt="camere"
-            src="http://localhost:5000/video_feed"
+            src={`${host}video_feed`}
             style={{ width: "100%" }}
           />
         </Grid>

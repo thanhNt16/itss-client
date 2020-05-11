@@ -38,9 +38,10 @@ const useStyles = makeStyles({
   },
 });
 const socket = io(host);
+var count = 0;
 
 function App() {
-  const [connected, setConnected] = useState(false);
+  const [currentKey, setCurrentKey] = useState("");
   const [robotID, setRobotID] = useState("");
   const [robotList, setRobotList] = useState([]);
   const [auto, setAuto] = useState(false);
@@ -85,47 +86,166 @@ function App() {
 
   useEffect(() => {
     function keyHandling(e) {
-      if (robotID) {
-        switch (e.keyCode) {
-          case 37:
-            // alert("press arrow left");
-            socket.emit("manual", { id: robotID, action: "left" });
+      // if (robotID) {
+      switch (e.keyCode) {
+        case 37:
+          // alert("press arrow left");
+          if (currentKey !== "left") {
+            count = 0;
+            setCurrentKey("left");
+          }
 
-            break;
-          case 38:
-            // alert("press arrow up");
+          count++;
+          if (count >= 3) {
+            count = 0;
+            socket.emit("manual", { id: robotID, action: "left" });
+          }
+          break;
+        case 38:
+          // alert("press arrow up");
+          if (currentKey !== "forward") {
+            count = 0;
+            setCurrentKey("forward");
+          }
+
+          count++;
+
+          console.log(count);
+          if (count >= 3) {
+            count = 0;
             socket.emit("manual", { id: robotID, action: "forward" });
-            break;
-          case 39:
-            // alert("press arrow right");
+          }
+          break;
+        case 39:
+          // alert("press arrow right");
+          if (currentKey !== "right") {
+            count = 0;
+            setCurrentKey("right");
+          }
+
+          count++;
+
+          console.log(count);
+          if (count >= 3) {
+            count = 0;
             socket.emit("manual", { id: robotID, action: "right" });
-            break;
-          case 40:
-            // alert("press arrow down");
+          }
+          break;
+        case 40:
+          // alert("press arrow down");
+          if (currentKey !== "backward") {
+            count = 0;
+            setCurrentKey("backward");
+          }
+
+          count++;
+
+          console.log(count);
+          if (count >= 3) {
+            count = 0;
             socket.emit("manual", { id: robotID, action: "backward" });
-            break;
-          case 80:
-            //press p
-            // alert("press arrow down");
+          }
+          break;
+        case 80:
+          //press p
+          // alert("press arrow down");
+          if (currentKey !== "up") {
+            count = 0;
+            setCurrentKey("up");
+          }
+
+          count++;
+
+          console.log(count);
+          if (count >= 3) {
+            count = 0;
             socket.emit("manual", { id: robotID, action: "up" });
-            break;
-          case 68:
+          }
+          break;
+        case 68:
+          if (currentKey !== "down") {
+            count = 0;
+            setCurrentKey("down");
+          }
+
+          count++;
+
+          console.log(count);
+          if (count >= 3) {
+            count = 0;
             socket.emit("manual", { id: robotID, action: "down" });
-            break;
-          default:
-            console.log("other key");
-            break;
-        }
-      } else {
-        swal("Oops!", "You should select a robot first", "error");
+          }
+          break;
+        default:
+          console.log("other key");
+          break;
       }
+      // } else {
+      //   swal("Oops!", "You should select a robot first", "error");
+      // }
     }
     window.addEventListener("keydown", keyHandling);
 
     return () => {
       window.removeEventListener("keydown", keyHandling);
     };
-  }, [robotID]);
+  }, [currentKey, robotID]);
+
+  useEffect(() => {
+    function keyHandlingUp(e) {
+      // if (robotID) {
+      switch (e.keyCode) {
+        case 37:
+          // alert("press arrow left");
+          count = 0;
+          console.log("left");
+          socket.emit("manual", { id: robotID, action: "left" });
+
+          break;
+        case 38:
+          // alert("press arrow up");
+          count = 0;
+          console.log("forward");
+          socket.emit("manual", { id: robotID, action: "forward" });
+          break;
+        case 39:
+          // alert("press arrow right");
+          count = 0;
+          console.log("right");
+          socket.emit("manual", { id: robotID, action: "right" });
+          break;
+        case 40:
+          // alert("press arrow down");
+          count = 0;
+          console.log("backward");
+          socket.emit("manual", { id: robotID, action: "backward" });
+          break;
+        case 80:
+          //press p
+          // alert("press arrow down");
+          count = 0;
+          console.log("up");
+          socket.emit("manual", { id: robotID, action: "up" });
+          break;
+        case 68:
+          count = 0;
+          console.log("down");
+          socket.emit("manual", { id: robotID, action: "down" });
+          break;
+        default:
+          console.log("other key");
+          break;
+      }
+      // } else {
+      //   swal("Oops!", "You should select a robot first", "error");
+      // }
+    }
+    window.addEventListener("keyup", keyHandlingUp);
+
+    return () => {
+      window.removeEventListener("keyup", keyHandlingUp);
+    };
+  }, [currentKey, robotID]);
 
   function handleClick(type) {
     if (robotID) {

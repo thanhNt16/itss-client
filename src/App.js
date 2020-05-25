@@ -148,7 +148,6 @@ function App() {
           break;
         case 80:
           //press p
-          // alert("press arrow down");
           if (currentKey !== "up") {
             count = 0;
             setCurrentKey("up");
@@ -329,11 +328,15 @@ function App() {
             </div>
           </Grid>
           <Grid item xs={12} md={6} className="flex justify-center">
-            <img
+            {/* <img
               alt="camere"
               src={`${host}video_feed`}
               style={{ width: "100%" }}
-            />
+            /> */}
+            <iframe
+              style={{ width: 400, height: 300 }}
+              src="https://player.twitch.tv/?channel=thanh6198&parent=www.example.com"
+            ></iframe>
           </Grid>
         </Grid>
       </div>

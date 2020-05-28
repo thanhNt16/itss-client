@@ -40,18 +40,22 @@ const useStyles = makeStyles({
 const socket = io(host);
 var count = 0;
 
+const init = [
+  [0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0],
+];
+
 function App() {
   const [currentKey, setCurrentKey] = useState("");
   const [robotID, setRobotID] = useState("");
   const [robotList, setRobotList] = useState([]);
   const [auto, setAuto] = useState(false);
   const classes = useStyles();
-  const matrix = [
-    [1, 2, 3, 4],
-    [1, 1, 1, 5],
-    [1, 1, 1, 1],
-    [1, 1, 1, 1],
-  ];
+  const [matrix, setMatrix] = useState(JSON.stringify(init));
+  const [start, setStart] = useState("0,0")
+  const [heading, setHeading] = useState("0,0")
 
   useEffect(() => {
     socket.open();
@@ -66,6 +70,12 @@ function App() {
       socket.close();
     };
   }, []);
+
+  useEffect(() => {
+    socket.on('update_coordinate', (id, x, y) => {
+      console.log(id, x, y)
+    })
+  })
 
   useEffect(() => {
     socket.on("robot_connected", (id) => {
@@ -94,10 +104,10 @@ function App() {
             count = 0;
             setCurrentKey("left");
           }
-
           count++;
           if (count >= 3) {
             count = 0;
+
             socket.emit("manual", { id: robotID, action: "left" });
           }
           break;
@@ -110,7 +120,6 @@ function App() {
 
           count++;
 
-          console.log(count);
           if (count >= 3) {
             count = 0;
             socket.emit("manual", { id: robotID, action: "forward" });
@@ -125,7 +134,6 @@ function App() {
 
           count++;
 
-          console.log(count);
           if (count >= 3) {
             count = 0;
             socket.emit("manual", { id: robotID, action: "right" });
@@ -140,7 +148,6 @@ function App() {
 
           count++;
 
-          console.log(count);
           if (count >= 3) {
             count = 0;
             socket.emit("manual", { id: robotID, action: "backward" });
@@ -155,7 +162,6 @@ function App() {
 
           count++;
 
-          console.log(count);
           if (count >= 3) {
             count = 0;
             socket.emit("manual", { id: robotID, action: "up" });
@@ -169,10 +175,22 @@ function App() {
 
           count++;
 
-          console.log(count);
           if (count >= 3) {
             count = 0;
             socket.emit("manual", { id: robotID, action: "down" });
+          }
+          break;
+        case 32:
+          if (currentKey !== "stop") {
+            count = 0;
+            setCurrentKey("stop");
+          }
+
+          count++;
+
+          if (count >= 3) {
+            count = 0;
+            socket.emit("manual", { id: robotID, action: "stop" });
           }
           break;
         default:
@@ -197,39 +215,37 @@ function App() {
         case 37:
           // alert("press arrow left");
           count = 0;
-          console.log("left");
           socket.emit("manual", { id: robotID, action: "left" });
 
           break;
         case 38:
           // alert("press arrow up");
           count = 0;
-          console.log("forward");
           socket.emit("manual", { id: robotID, action: "forward" });
           break;
         case 39:
           // alert("press arrow right");
           count = 0;
-          console.log("right");
           socket.emit("manual", { id: robotID, action: "right" });
           break;
         case 40:
           // alert("press arrow down");
           count = 0;
-          console.log("backward");
           socket.emit("manual", { id: robotID, action: "backward" });
           break;
         case 80:
           //press p
           // alert("press arrow down");
           count = 0;
-          console.log("up");
           socket.emit("manual", { id: robotID, action: "up" });
           break;
         case 68:
           count = 0;
-          console.log("down");
           socket.emit("manual", { id: robotID, action: "down" });
+          break;
+        case 32:
+          count = 0;
+          socket.emit("manual", { id: robotID, action: "stop" });
           break;
         default:
           console.log("other key");
@@ -268,13 +284,31 @@ function App() {
         case "drop":
           socket.emit("manual", { id: robotID, action: "down" });
           break;
-        default:
+        case "stop":
+          socket.emit("manual", { id: robotID, action: "stop" });
           break;
+        default:
       }
     } else {
       console.log("Please choose robot first");
       swal("Oops!", "You should select a robot first", "error");
     }
+  }
+
+  function handleChangeMatrix(x, y) {
+    var newMatrix = [...JSON.parse(matrix)];
+    newMatrix[x][y] = newMatrix[x][y] === 1 ? 0 : 1;
+
+    setMatrix(JSON.stringify(newMatrix));
+  }
+  function handleAuto() {
+    const startX = start.split(",")[0]
+    const startY = start.split(",")[1]
+
+    const headX = heading.split(",")[0]
+    const headY = heading.split(",")[1]
+
+    socket.emit('auto', {robotID, start: {startX, startY}, end: {headX, headY}})
   }
 
   return (
@@ -298,33 +332,41 @@ function App() {
         <Grid container>
           <Grid item xs={12} md={6} className="flex justify-center">
             <div className={classes.matrix}>
-              {matrix.map((item, ind) => {
-                return (
-                  <div key={ind} className="flex">
-                    {item.map((el, index) => {
-                      return (
-                        <div
-                          key={index}
-                          className={
-                            index === item.length - 1
-                              ? clsx(
-                                  classes.box,
-                                  "flex justify-center items-center"
-                                )
-                              : clsx(
-                                  classes.box,
-                                  classes.noBorderRight,
-                                  "flex justify-center items-center"
-                                )
-                          }
-                        >
-                          {el}
-                        </div>
-                      );
-                    })}
-                  </div>
-                );
-              })}
+              {console.log("a", JSON.parse(matrix))}
+              {matrix &&
+                JSON.parse(`${matrix}`).map((item, ind) => {
+                  return (
+                    <div key={ind} className="flex">
+                      {item.map((el, index) => {
+                        return (
+                          <div
+                            key={index}
+                            style={
+                              el === 1
+                                ? { background: "#1ea2ff", color: "white" }
+                                : {}
+                            }
+                            onClick={() => handleChangeMatrix(ind, index)}
+                            className={
+                              index === item.length - 1
+                                ? clsx(
+                                    classes.box,
+                                    "flex justify-center items-center"
+                                  )
+                                : clsx(
+                                    classes.box,
+                                    classes.noBorderRight,
+                                    "flex justify-center items-center"
+                                  )
+                            }
+                          >
+                            {el}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  );
+                })}
             </div>
           </Grid>
           <Grid item xs={12} md={6} className="flex justify-center">
@@ -334,6 +376,7 @@ function App() {
               style={{ width: "100%" }}
             /> */}
             <iframe
+              title="Camera Streaming"
               style={{ width: 400, height: 300 }}
               src="https://player.twitch.tv/?channel=thanh6198&parent=www.example.com"
             ></iframe>
@@ -356,16 +399,16 @@ function App() {
                   })}
                 </Select>
               </FormControl>
-              <TextField
+              {/* <TextField
                 className="ml-12"
                 label="Starting Point"
                 variant="outlined"
                 inputProps={{
                   style: { borderColor: "#4299e1", color: "#4299e1" },
                 }}
-              />
+              /> */}
             </div>
-            <div className="flex mt-8  w-full">
+            {/* <div className="flex mt-8  w-full">
               <TextField
                 label="Heading Point"
                 variant="outlined"
@@ -379,7 +422,7 @@ function App() {
               >
                 Submit
               </Button>
-            </div>
+            </div> */}
           </Grid>
           <Grid item xs={12} md={6} className="flex flex-col">
             <Typography variant="h5">Auto Mode</Typography>
@@ -435,6 +478,16 @@ function App() {
                     Pick
                   </Button>
                   <Button
+                    onClick={() => handleClick("stop")}
+                    variant="contained"
+                    style={{
+                      background: "#4299e1",
+                      color: "#fff",
+                    }}
+                  >
+                    Stop
+                  </Button>
+                  <Button
                     onClick={() => handleClick("down")}
                     variant="contained"
                     style={{ background: "#4299e1", color: "#fff" }}
@@ -449,12 +502,24 @@ function App() {
                 <TextField
                   label="Starting Point"
                   variant="outlined"
+                  onChange={e => setStart(e.target.value)}
+                  value={start}
+                  inputProps={{
+                    style: { borderColor: "#4299e1", color: "#4299e1" },
+                  }}
+                />
+                <TextField
+                  label="Heading Point"
+                  variant="outlined"
+                  value={heading}
+                  onChange={e => setHeading(e.target.value)}
                   inputProps={{
                     style: { borderColor: "#4299e1", color: "#4299e1" },
                   }}
                 />
                 <Button
                   variant="contained"
+                  onClick={handleAuto}
                   style={{ background: "#4299e1", color: "#fff" }}
                 >
                   Start

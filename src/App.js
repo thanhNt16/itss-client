@@ -300,6 +300,7 @@ function App() {
     newMatrix[x][y] = newMatrix[x][y] === 1 ? 0 : 1;
 
     setMatrix(JSON.stringify(newMatrix));
+    socket.emit("update_map", { map: newMatrix })
   }
   function handleAuto() {
     const startX = start.split(",")[0]

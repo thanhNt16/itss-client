@@ -19,7 +19,8 @@ import {
 import { makeStyles } from "@material-ui/core/styles";
 import io from "socket.io-client";
 
-const host = "https://itss-server.herokuapp.com/";
+// const host = "https://itss-server.herokuapp.com/";
+const host = "http://localhost:5000/";
 
 const useStyles = makeStyles({
   titleBackground: {
@@ -54,8 +55,8 @@ function App() {
   const [auto, setAuto] = useState(false);
   const classes = useStyles();
   const [matrix, setMatrix] = useState(JSON.stringify(init));
-  const [start, setStart] = useState("0,0")
-  const [heading, setHeading] = useState("0,0")
+  const [start, setStart] = useState("0,0");
+  const [heading, setHeading] = useState("0,0");
 
   useEffect(() => {
     socket.open();
@@ -72,10 +73,10 @@ function App() {
   }, []);
 
   useEffect(() => {
-    socket.on('update_coordinate', (id, x, y) => {
-      console.log(id, x, y)
-    })
-  })
+    socket.on("update_coordinate", (id, x, y) => {
+      console.log(id, x, y);
+    });
+  });
 
   useEffect(() => {
     socket.on("robot_connected", (id) => {
@@ -300,16 +301,20 @@ function App() {
     newMatrix[x][y] = newMatrix[x][y] === 1 ? 0 : 1;
 
     setMatrix(JSON.stringify(newMatrix));
-    socket.emit("update_map", { map: newMatrix })
+    socket.emit("update_map", { map: newMatrix });
   }
   function handleAuto() {
-    const startX = start.split(",")[0]
-    const startY = start.split(",")[1]
+    const startX = start.split(",")[0];
+    const startY = start.split(",")[1];
 
-    const headX = heading.split(",")[0]
-    const headY = heading.split(",")[1]
+    const headX = heading.split(",")[0];
+    const headY = heading.split(",")[1];
 
-    socket.emit('auto', {robotID, start: {startX, startY}, end: {headX, headY}})
+    socket.emit("auto", {
+      id: robotID,
+      start: { x: parseInt(startX), y: parseInt(startY) },
+      end: { x: parseInt(headX), y: parseInt(headY) },
+    });
   }
 
   return (
@@ -503,7 +508,7 @@ function App() {
                 <TextField
                   label="Starting Point"
                   variant="outlined"
-                  onChange={e => setStart(e.target.value)}
+                  onChange={(e) => setStart(e.target.value)}
                   value={start}
                   inputProps={{
                     style: { borderColor: "#4299e1", color: "#4299e1" },
@@ -513,7 +518,7 @@ function App() {
                   label="Heading Point"
                   variant="outlined"
                   value={heading}
-                  onChange={e => setHeading(e.target.value)}
+                  onChange={(e) => setHeading(e.target.value)}
                   inputProps={{
                     style: { borderColor: "#4299e1", color: "#4299e1" },
                   }}

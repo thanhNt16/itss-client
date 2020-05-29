@@ -50,6 +50,7 @@ const init = [
 
 function App() {
   const [currentKey, setCurrentKey] = useState("");
+  const [robotCoor, setrobotCoor] = useState({ x: 0, y: 0 });
   const [robotID, setRobotID] = useState("");
   const [robotList, setRobotList] = useState([]);
   const [auto, setAuto] = useState(false);
@@ -73,10 +74,11 @@ function App() {
   }, []);
 
   useEffect(() => {
-    socket.on("update_coordinate", (id, x, y) => {
-      console.log(id, x, y);
+    socket.on("update_coordinate", ({ id, x, y }) => {
+      console.log("coor", id, x, y);
+      setrobotCoor({ x, y });
     });
-  });
+  }, []);
 
   useEffect(() => {
     socket.on("robot_connected", (id) => {
@@ -207,7 +209,7 @@ function App() {
     return () => {
       window.removeEventListener("keydown", keyHandling);
     };
-  }, [currentKey, robotID]);
+  }, [currentKey, robotID, auto]);
 
   useEffect(() => {
     function keyHandlingUp(e) {
@@ -261,7 +263,7 @@ function App() {
     return () => {
       window.removeEventListener("keyup", keyHandlingUp);
     };
-  }, [currentKey, robotID]);
+  }, [currentKey, robotID, auto]);
 
   function handleClick(type) {
     if (robotID) {
@@ -338,7 +340,6 @@ function App() {
         <Grid container>
           <Grid item xs={12} md={6} className="flex justify-center">
             <div className={classes.matrix}>
-              {console.log("a", JSON.parse(matrix))}
               {matrix &&
                 JSON.parse(`${matrix}`).map((item, ind) => {
                   return (
@@ -350,7 +351,14 @@ function App() {
                             style={
                               el === 1
                                 ? { background: "#1ea2ff", color: "white" }
-                                : {}
+                                : {
+                                    background:
+                                      robotCoor.x === ind &&
+                                      robotCoor.y === index
+                                        ? "#f94e2f"
+                                        : "#fff",
+                                    color: "#000",
+                                  }
                             }
                             onClick={() => handleChangeMatrix(ind, index)}
                             className={
@@ -401,7 +409,11 @@ function App() {
                   onChange={(e) => setRobotID(e.target.value)}
                 >
                   {robotList.map((item, index) => {
-                    return <MenuItem key={index} value={item}>{item}</MenuItem>;
+                    return (
+                      <MenuItem key={index} value={item}>
+                        {item}
+                      </MenuItem>
+                    );
                   })}
                 </Select>
               </FormControl>

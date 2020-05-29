@@ -383,7 +383,7 @@ function App() {
             /> */}
             <iframe
               title="Camera Streaming"
-              style={{ width: 400, height: 300 }}
+              style={{ width: "100%", height: 300 }}
               src="https://player.twitch.tv/?channel=thanh6198&parent=www.example.com"
             ></iframe>
           </Grid>
@@ -400,8 +400,8 @@ function App() {
                   value={robotID}
                   onChange={(e) => setRobotID(e.target.value)}
                 >
-                  {robotList.map((item) => {
-                    return <MenuItem value={item}>{item}</MenuItem>;
+                  {robotList.map((item, index) => {
+                    return <MenuItem key={index} value={item}>{item}</MenuItem>;
                   })}
                 </Select>
               </FormControl>

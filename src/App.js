@@ -202,7 +202,7 @@ function App() {
       //   swal("Oops!", "You should select a robot first", "error");
       // }
     }
-    window.addEventListener("keydown", keyHandling);
+    !auto && window.addEventListener("keydown", keyHandling);
 
     return () => {
       window.removeEventListener("keydown", keyHandling);
@@ -256,7 +256,7 @@ function App() {
       //   swal("Oops!", "You should select a robot first", "error");
       // }
     }
-    window.addEventListener("keyup", keyHandlingUp);
+    !auto && window.addEventListener("keyup", keyHandlingUp);
 
     return () => {
       window.removeEventListener("keyup", keyHandlingUp);

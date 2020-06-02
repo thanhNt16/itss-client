@@ -51,7 +51,7 @@ const init = [
 function App() {
   const [currentKey, setCurrentKey] = useState("");
   const [streamUrl, setStreamUrl] = useState(
-    "https://player.twitch.tv/?channel=thanh6198&parent=www.example.com"
+    "https://player.twitch.tv/?channel=yosef2127&parent=www.example.com"
   );
   const [tempUrl, setTempUrl] = useState(streamUrl);
   const [robotCoor, setrobotCoor] = useState({ x: 0, y: 0 });

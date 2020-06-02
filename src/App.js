@@ -540,7 +540,7 @@ function App() {
                   }}
                 />
                 <TextField
-                  label="Heading Point"
+                  label="Ending Point"
                   variant="outlined"
                   value={heading}
                   onChange={(e) => setHeading(e.target.value)}

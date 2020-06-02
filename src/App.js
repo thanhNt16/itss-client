@@ -50,6 +50,10 @@ const init = [
 
 function App() {
   const [currentKey, setCurrentKey] = useState("");
+  const [streamUrl, setStreamUrl] = useState(
+    "https://player.twitch.tv/?channel=thanh6198&parent=www.example.com"
+  );
+  const [tempUrl, setTempUrl] = useState(streamUrl);
   const [robotCoor, setrobotCoor] = useState({ x: 0, y: 0 });
   const [robotID, setRobotID] = useState("");
   const [robotList, setRobotList] = useState([]);
@@ -319,6 +323,10 @@ function App() {
     });
   }
 
+  function handleSubmit() {
+    setStreamUrl(tempUrl);
+  }
+
   return (
     <div className="w-full h-full p-12">
       <div
@@ -383,16 +391,44 @@ function App() {
                 })}
             </div>
           </Grid>
-          <Grid item xs={12} md={6} className="flex justify-center">
+          <Grid
+            item
+            xs={12}
+            md={6}
+            className="flex flex-col items-center justify-center"
+          >
             {/* <img
               alt="camere"
               src={`${host}video_feed`}
               style={{ width: "100%" }}
             /> */}
+            <div className="w-full flex justify-between items-center">
+              <TextField
+                label="Stream URL"
+                variant="outlined"
+                fullWidth
+                onChange={(e) => setTempUrl(e.target.value)}
+                value={tempUrl}
+                inputProps={{
+                  style: { borderColor: "#4299e1", color: "#4299e1" },
+                }}
+              />
+              <Button
+                onClick={handleSubmit}
+                variant="contained"
+                style={{
+                  background: "#4299e1",
+                  color: "#fff",
+                  height: 56,
+                }}
+              >
+                Stream
+              </Button>
+            </div>
             <iframe
               title="Camera Streaming"
               style={{ width: "100%", height: 300 }}
-              src="https://player.twitch.tv/?channel=thanh6198&parent=www.example.com"
+              src={streamUrl}
             ></iframe>
           </Grid>
         </Grid>
@@ -417,30 +453,7 @@ function App() {
                   })}
                 </Select>
               </FormControl>
-              {/* <TextField
-                className="ml-12"
-                label="Starting Point"
-                variant="outlined"
-                inputProps={{
-                  style: { borderColor: "#4299e1", color: "#4299e1" },
-                }}
-              /> */}
             </div>
-            {/* <div className="flex mt-8  w-full">
-              <TextField
-                label="Heading Point"
-                variant="outlined"
-                inputProps={{
-                  style: { borderColor: "#4299e1", color: "#4299e1" },
-                }}
-              />
-              <Button
-                variant="contained"
-                style={{ background: "#4299e1", color: "#fff" }}
-              >
-                Submit
-              </Button>
-            </div> */}
           </Grid>
           <Grid item xs={12} md={6} className="flex flex-col">
             <Typography variant="h5">Auto Mode</Typography>

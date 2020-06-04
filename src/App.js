@@ -19,8 +19,8 @@ import {
 import { makeStyles } from "@material-ui/core/styles";
 import io from "socket.io-client";
 
-// const host = "https://itss-server.herokuapp.com/";
-const host = "http://localhost:5000/";
+const host = "https://itss-server.herokuapp.com/";
+// const host = "http://localhost:5000/";
 
 const useStyles = makeStyles({
   titleBackground: {

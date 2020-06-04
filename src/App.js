@@ -286,22 +286,33 @@ function App() {
     if (robotID) {
       switch (type) {
         case "forward":
+          console.log("click forward")
+
           socket.emit("manual", { id: robotID, action: "forward" });
           break;
         case "left":
+          console.log("click left")
+
           socket.emit("manual", { id: robotID, action: "left" });
           break;
         case "right":
+          console.log("click right")
+
           socket.emit("manual", { id: robotID, action: "right" });
           break;
-        case "down":
+        case "backward":
+          console.log("click backward")
           socket.emit("manual", { id: robotID, action: "backward" });
           break;
         case "pick":
+          console.log("click pick")
+
           socket.emit("manual", { id: robotID, action: "up" });
           break;
 
         case "drop":
+          console.log("click down")
+
           socket.emit("manual", { id: robotID, action: "down" });
           break;
         case "stop":

@@ -19,8 +19,8 @@ import {
 import { makeStyles } from "@material-ui/core/styles";
 import io from "socket.io-client";
 
-const host = "https://itss-server.herokuapp.com/";
-// const host = "http://localhost:5000/";
+// const host = "https://itss-server.herokuapp.com/";
+const host = "http://localhost:5000/";
 
 const useStyles = makeStyles({
   titleBackground: {
@@ -523,7 +523,7 @@ function App() {
                 </div>
                 <div className="w-full flex justify-around mt-8">
                   <Button
-                    onClick={() => handleClick("up")}
+                    onClick={() => handleClick("pick")}
                     variant="contained"
                     style={{
                       background: "#4299e1",
@@ -543,7 +543,7 @@ function App() {
                     Stop
                   </Button>
                   <Button
-                    onClick={() => handleClick("down")}
+                    onClick={() => handleClick("drop")}
                     variant="contained"
                     style={{ background: "#4299e1", color: "#fff" }}
                   >

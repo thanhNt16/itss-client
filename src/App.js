@@ -114,7 +114,7 @@ function App() {
           count++;
           if (count >= 3) {
             count = 0;
-
+            console.log("left")
             socket.emit("manual", { id: robotID, action: "left" });
           }
           break;
@@ -129,6 +129,8 @@ function App() {
 
           if (count >= 3) {
             count = 0;
+            console.log("forward")
+
             socket.emit("manual", { id: robotID, action: "forward" });
           }
           break;
@@ -136,6 +138,7 @@ function App() {
           // alert("press arrow right");
           if (currentKey !== "right") {
             count = 0;
+
             setCurrentKey("right");
           }
 
@@ -143,6 +146,8 @@ function App() {
 
           if (count >= 3) {
             count = 0;
+            console.log("right")
+
             socket.emit("manual", { id: robotID, action: "right" });
           }
           break;
@@ -157,6 +162,8 @@ function App() {
 
           if (count >= 3) {
             count = 0;
+            console.log("backward")
+
             socket.emit("manual", { id: robotID, action: "backward" });
           }
           break;
@@ -171,6 +178,8 @@ function App() {
 
           if (count >= 3) {
             count = 0;
+            console.log("up")
+
             socket.emit("manual", { id: robotID, action: "up" });
           }
           break;
@@ -184,6 +193,8 @@ function App() {
 
           if (count >= 3) {
             count = 0;
+            console.log("down")
+            
             socket.emit("manual", { id: robotID, action: "down" });
           }
           break;
@@ -197,6 +208,8 @@ function App() {
 
           if (count >= 3) {
             count = 0;
+            console.log("stop")
+
             socket.emit("manual", { id: robotID, action: "stop" });
           }
           break;
